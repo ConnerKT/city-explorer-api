@@ -37,5 +37,5 @@ app.get('/weather',(req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`🔥 We're live on ${port} 🔥`)
+    console.log(`🔥 We're live on ${port} 🔥`);
 })
