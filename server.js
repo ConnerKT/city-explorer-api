@@ -30,8 +30,10 @@ app.get('/weather',(req, res) => {
         latitude:weatherdata[2].lat
     }
     let allLocationData = [seattleData,parisData,ammanData];
-    weatherdata.find(value => value.city_name === searchQuery);
-
+    let searchQueryBoolean = weatherdata.find(value => value.city_name === searchQuery);
+    if (searchQueryBoolean === true){
+        
+    }
     
     
 });
