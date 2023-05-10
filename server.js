@@ -41,7 +41,12 @@ app.get('/weather',(req, res) => {
             return false
         }
     });
-console.log(searchQueryBoolean)
+    let newArr = searchQueryBoolean.data.map(element => {
+        let date = new Date(element.datetime)
+        const Forecast1 = new Forecast(date)
+        return Forecast1
+    })
+    console.log(newArr)
     if (searchQuery == undefined){
         res.status(400).send("ERROR please input a city name, latitude, or longitude")
     }
