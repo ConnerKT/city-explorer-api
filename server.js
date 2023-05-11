@@ -35,20 +35,27 @@ app.get('/weather',(req, res) => {
     // let allLocationData = [seattleData,parisData,ammanData];
     let searchQueryBoolean = weatherdata.find(value => {
         if (searchQuery == value.city_name || value.lat == latitudeQuery || value.lon == longitudeQuery){
-            res.send("WORKS WORKS")
             return true;
         }else {
             return false
         }
     });
-    let newArr = searchQueryBoolean.data.map(element => {
-        let date = new Date(element.datetime)
-        const Forecast1 = new Forecast(date)
+    let newArr = searchQueryBoolean.data.map((element, index) => {
+        let date = new Date(element.datetime);
+        let description = element.weather.description;
+        let lowtemp = element.low_temp;
+        let hightemp = element.high_temp;
+        let day = index + 1
+        const Forecast1 = new Forecast(day, date, description, lowtemp, hightemp);
         return Forecast1
     })
-    console.log(newArr)
     if (searchQuery == undefined){
         res.status(400).send("ERROR please input a city name, latitude, or longitude")
+    }
+    if (searchQueryBoolean){
+        res.send(newArr);
+    }else{
+        return [];
     }
 });
 // This is an endpoint for any other endpoint that is not declared, which returns an "Not Found" text
@@ -59,8 +66,11 @@ app.listen(port, () => {
     console.log(`🔥 We're live on ${port} 🔥`)
 })
 class Forecast {
-    constructor(date, description) {
+    constructor(day,date, description, lowtemp, hightemp) {
+        this.day = day;
         this.date = date;
         this.description = description;
+        this.lowtemp = lowtemp;
+        this.hightemp = hightemp;
     }
 }
