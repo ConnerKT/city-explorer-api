@@ -5,19 +5,37 @@ const cors = require("cors");// This allows cross origin request
 const express = require("express");// Adding express allows us to make web applications with ease
 const app = express(); // We set express to a variable so we can utilize the HTTP verbs
 const weatherdata = require("./data/weather.json"); //Adding our data for our API
+const axios = require('axios'); //Importint axios so we can access the data from the API
 const port = 3001; //Defining our PORT
 app.use(cors()); // We use CORS here
+
+
+//Grabbing data from the API to send to our endpoints
+const getWeather = async (searchQuery,longitudeQuery,latitudeQuery) => {
+  try{
+    let url = `http://api.weatherbit.io/v2.0/current?key=${process.env.WEATHER_API_KEY}&lat=${latitudeQuery}&lon=${longitudeQuery}&city=${searchQuery}`
+    let response = await axios.get(url);
+    return response.data
+  }catch(error){
+    console.log(error)
+  }
+  
+}
 
 // Setting the default endpoint to send 
 app.get("/", (req, res) => {
   res.send(`🔴 We're currently live on the Port ${port}✨`);
 });
 // Our http get is below for the endpoint of weather
-app.get("/weather", (req, res) => {
+app.get("/weather", async (req, res) => {
+  
     //Here we set the query for the endpoint 
   let searchQuery = req.query.searchQuery;
   let longitudeQuery = req.query.longitudeQuery;
   let latitudeQuery = req.query.latitudeQuery;
+
+  let Weatherdata= await getWeather(searchQuery,longitudeQuery,latitudeQuery);
+  console.log(Weatherdata)
   //We use .find to go through our array of data and see if any of the querys are contained
   let searchQueryBoolean = weatherdata.find((value) => {
     if (
