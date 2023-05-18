@@ -13,7 +13,7 @@ app.use(cors()); // We use CORS here
 //Grabbing data from the API to send to our endpoints
 const getWeather = async (searchQuery,longitudeQuery,latitudeQuery) => {
   try{
-    let url = `http://api.weatherbit.io/v2.0/current?key=${process.env.WEATHER_API_KEY}&lat=${latitudeQuery}&lon=${longitudeQuery}&city=${searchQuery}`
+    let url = `https://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHER_API_KEY}&city=${searchQuery}`
     let response = await axios.get(url);
     return response.data
   }catch(error){
@@ -37,30 +37,30 @@ app.get("/weather", async (req, res) => {
   let Weatherdata= await getWeather(searchQuery,longitudeQuery,latitudeQuery);
   console.log(Weatherdata)
   //We use .find to go through our array of data and see if any of the querys are contained
-  let searchQueryBoolean = weatherdata.find((value) => {
-    if (
-      searchQuery == value.city_name ||
-      value.lat == latitudeQuery ||
-      value.lon == longitudeQuery
-    ) {
-        //Return true if its appears
-      return true;
-    } else {
-        //Return false if it doesn't
-      return false;
-    }
-  });
+  // let searchQueryBoolean = weatherdata.find((value) => {
+  //   if (
+  //     searchQuery == value.city_name ||
+  //     value.lat == latitudeQuery ||
+  //     value.lon == longitudeQuery
+  //   ) {
+  //       //Return true if its appears
+  //     return true;
+  //   } else {
+  //       //Return false if it doesn't
+  //     return false;
+  //   }
+  // });
   //We declare a new Array and map through the array above, we use a class to create new objects for this array
-  let newArr = searchQueryBoolean.data.map((element, index) => {
+  let newArr = Weatherdata.data.map((element, index) => {
     //it contains all the info we need for the current selected element
-    let cityname = searchQueryBoolean.city_name;
+    let cityname = Weatherdata.city_name;
     let date = new Date(element.datetime);
     let description = element.weather.description;
     let lowtemp = element.low_temp;
     let hightemp = element.high_temp;
     let day = index + 1;
-    let lat = searchQueryBoolean.lat;
-    let lon = searchQueryBoolean.lon;
+    let lat = Weatherdata.lat;
+    let lon = Weatherdata.lon;
     //We set the new forecast(class) to forecast1, and input forecast1 into our array
     const Forecast1 = new Forecast(
       cityname,
@@ -80,13 +80,7 @@ app.get("/weather", async (req, res) => {
       .status(500)
       .send("ERROR please input a city name, latitude, or longitude");
   }
-  //If our searchQueryBoolean is true, we want to send the data
-  if (searchQueryBoolean) {
-    res.send(newArr);
-  } else {
-    //If not we return an empty array
-    return [];
-  }
+res.send(newArr)
 });
 // This is an endpoint for any other endpoint that is not declared, which returns an "Not Found" text
 app.get("*", (request, response) => {
