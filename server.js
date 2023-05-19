@@ -21,7 +21,7 @@ const getWeather = async (searchQuery,longitudeQuery,latitudeQuery) => {
 }
 const getMovie = async () => {
   try{
-    let url = ''
+    let url = `https://api.themoviedb.org/3/search/multi?api_key=${process.env.WEATHER_API_KEY}&query=${}`
   }catch(error){
     console.log("Something went wrong! Please Try Again Later!!")
   }
