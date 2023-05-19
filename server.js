@@ -80,17 +80,18 @@ app.get("/movies", async (request, response) => {
   let movieQuery = request.query.movieQuery;
   let movieData= await getMovie(movieQuery);
   // response.send(movieData)
+  console.log(movieData.results)
   let newArr = movieData.results.map((element) => {
     //it contains all the info we need for the current selected element
     let title = element.title;
     let overview = element.overview;
     let average_votes = element.average_votes;
     let total_votes = element.total_votes;
-    let image_url = element.image_url;
+    let poster_path = element.poster_path;
     let popularity = element.popularity;
-    let released_on = element.released_on;
+    let release_date = element.release_date;
     //We set the new forecast(class) to forecast1, and input forecast1 into our array
-    const Movie1 = new Movie(title, overview, average_votes, total_votes, image_url, popularity, released_on);
+    const Movie1 = new Movie(title, overview, average_votes, total_votes, poster_path, popularity, release_date);
     return Movie1;
   });
   if (movieQuery === undefined){
@@ -121,13 +122,13 @@ class Forecast {
   }
 }
 class Movie {
-  constructor(title, overview, average_votes, total_votes, image_url, popularity, released_on){
+  constructor(title, overview, average_votes, total_votes, poster_path, popularity, release_date){
     this.title = title;
     this.overview = overview;
     this.average_votes = average_votes;
     this.total_votes = total_votes;
-    this.image_url = image_url;
+    this.poster_path = poster_path;
     this.popularity = popularity
-    this.released_on = released_on;
+    this.release_date = release_date;
   }
 }
