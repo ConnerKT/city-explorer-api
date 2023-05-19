@@ -9,7 +9,6 @@ const axios = require('axios'); //Importint axios so we can access the data from
 const port = 3001; //Defining our PORT
 app.use(cors()); // We use CORS here
 
-
 //Grabbing data from the API to send to our endpoints
 const getWeather = async (searchQuery,longitudeQuery,latitudeQuery) => {
   try{
@@ -19,9 +18,14 @@ const getWeather = async (searchQuery,longitudeQuery,latitudeQuery) => {
   }catch(error){
     console.log(error)
   }
-  
 }
-
+const getMovie = async () => {
+  try{
+    let url = ''
+  }catch(error){
+    console.log("Something went wrong! Please Try Again Later!!")
+  }
+}
 // Setting the default endpoint to send 
 app.get("/", (req, res) => {
   res.send(`🔴 We're currently live on the Port ${port}✨`);
@@ -35,21 +39,6 @@ app.get("/weather", async (req, res) => {
   let latitudeQuery = req.query.latitudeQuery;
 
   let Weatherdata= await getWeather(searchQuery,longitudeQuery,latitudeQuery);
-  console.log(Weatherdata)
-  //We use .find to go through our array of data and see if any of the querys are contained
-  // let searchQueryBoolean = weatherdata.find((value) => {
-  //   if (
-  //     searchQuery == value.city_name ||
-  //     value.lat == latitudeQuery ||
-  //     value.lon == longitudeQuery
-  //   ) {
-  //       //Return true if its appears
-  //     return true;
-  //   } else {
-  //       //Return false if it doesn't
-  //     return false;
-  //   }
-  // });
   //We declare a new Array and map through the array above, we use a class to create new objects for this array
   let newArr = Weatherdata.data.map((element, index) => {
     //it contains all the info we need for the current selected element
