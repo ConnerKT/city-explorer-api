@@ -19,11 +19,16 @@ const getWeather = async (searchQuery,longitudeQuery,latitudeQuery) => {
     console.log(error)
   }
 }
-const getMovie = async () => {
+const getMovie = async (movieQuery) => {
   try{
-    let url = `https://api.themoviedb.org/3/search/multi?api_key=${process.env.WEATHER_API_KEY}&query=${}`
+    let url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${movieQuery}`
+    let response = await axios.get(url);
+    return response.data
   }catch(error){
-    console.log("Something went wrong! Please Try Again Later!!")
+  console.log(error)
+  console.log(error.response.data);
+  console.log(error.response.status);
+  console.log(error.response.headers);
   }
 }
 // Setting the default endpoint to send 
@@ -71,6 +76,29 @@ app.get("/weather", async (req, res) => {
   }
 res.send(newArr)
 });
+app.get("/movies", async (request, response) => {
+  let movieQuery = request.query.movieQuery;
+  let movieData= await getMovie(movieQuery);
+  // response.send(movieData)
+  let newArr = movieData.results.map((element) => {
+    //it contains all the info we need for the current selected element
+    let title = element.title;
+    let overview = element.overview;
+    let average_votes = element.average_votes;
+    let total_votes = element.total_votes;
+    let image_url = element.image_url;
+    let popularity = element.popularity;
+    let released_on = element.released_on;
+    //We set the new forecast(class) to forecast1, and input forecast1 into our array
+    const Movie1 = new Movie(title, overview, average_votes, total_votes, image_url, popularity, released_on);
+    return Movie1;
+  });
+  if (movieQuery === undefined){
+      res.status(500).send("Please input something!");
+  
+  }
+  response.send(newArr)
+})
 // This is an endpoint for any other endpoint that is not declared, which returns an "Not Found" text
 app.get("*", (request, response) => {
   response.status(404).send("not found");
@@ -90,5 +118,16 @@ class Forecast {
     this.hightemp = hightemp;
     this.lat = lat;
     this.long = lon;
+  }
+}
+class Movie {
+  constructor(title, overview, average_votes, total_votes, image_url, popularity, released_on){
+    this.title = title;
+    this.overview = overview;
+    this.average_votes = average_votes;
+    this.total_votes = total_votes;
+    this.image_url = image_url;
+    this.popularity = popularity
+    this.released_on = released_on;
   }
 }
