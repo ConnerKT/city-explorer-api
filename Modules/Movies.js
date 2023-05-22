@@ -1,8 +1,9 @@
 const axios = require('axios'); //Important axios so we can access the data from the API
 const NodeCache = require ("node-cache")// We are using a library called NodeCache to help cache our incoming data
 
+//This is where you let our library node-cache be used in our code, by setting it here.
 const cache = new NodeCache();
-
+//We export our movie module so we can use it in server
 exports.movies = async function(request, response){
 
     const getMovie = async (movieQuery) => {
@@ -10,19 +11,21 @@ exports.movies = async function(request, response){
           let url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${movieQuery}`
         const cachedData = cache.get(url);
         if (cachedData) {
+          //This is a conditional return if our data is cached
           return cachedData;
       }
           let response = await axios.get(url);
           cache.set(url, responseData, 5000);
           return response.data
         }catch(error){
+          //Error Handling for the response
         console.log(error)
         console.log(error.response.data);
         console.log(error.response.status);
         console.log(error.response.headers);
         }
       }
-
+      // Our movie class constructor
       class Movie {
         constructor(title, overview, average_votes, total_votes, poster_path, popularity, release_date){
           this.title = title;
