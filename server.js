@@ -4,7 +4,8 @@ require("dotenv").config();
 const cors = require("cors");// This allows cross origin request
 const express = require("express");// Adding express allows us to make web applications with ease
 const app = express(); // We set express to a variable so we can utilize the HTTP verbs
-const axios = require('axios'); //Importint axios so we can access the data from the API
+const axios = require('axios'); //Important axios so we can access the data from the API
+const NodeCache = require ("node-cache")// We are using a library called NodeCache to help cache our incoming data
 const port = 3001; //Defining our PORT
 const weather = require("./Modules/Weather")
 const movies = require("./Modules/Movies.js")
@@ -26,4 +27,6 @@ app.get("*", (request, response) => {
 app.listen(port, () => {
   console.log(`🔥 We're live on ${port} 🔥`);
 });
+
+
 

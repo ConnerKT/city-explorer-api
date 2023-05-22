@@ -1,10 +1,19 @@
 const axios = require('axios'); //Important axios so we can access the data from the API
+const NodeCache = require ("node-cache")// We are using a library called NodeCache to help cache our incoming data
+
+const cache = new NodeCache();
 
 exports.movies = async function(request, response){
+
     const getMovie = async (movieQuery) => {
         try{
           let url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${movieQuery}`
+        const cachedData = cache.get(url);
+        if (cachedData) {
+          return cachedData;
+      }
           let response = await axios.get(url);
+          cache.set(url, responseData, 5000);
           return response.data
         }catch(error){
         console.log(error)
