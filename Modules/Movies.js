@@ -15,7 +15,7 @@ exports.movies = async function(request, response){
           return cachedData;
       }
           let response = await axios.get(url);
-          cache.set(url, responseData, 5000);
+          cache.set(url, response.data, 5000);
           return response.data
         }catch(error){
           //Error Handling for the response
